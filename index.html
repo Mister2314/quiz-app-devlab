@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+        <!-- Bunun kimi internetdə (github-da) bir layihə görmüşdüm, ondan ilham alınaraq edildi, yəni o layihənin kodlarına baxılaraq-->
+
+    <div class="container">
+        <div class="quiz-app">
+            <div id="start-screen" class="screen">
+                <h1>Brain Teaser Quiz</h1>
+                <p>Test your knowledge with these web development questions!</p>
+                <button id="start-btn" class="btn">Start Quiz</button>
+            </div>
+
+            <div id="quiz-screen" class="screen hide">
+                <div class="quiz-header">
+                    <div class="quiz-info">
+                        <span id="question-counter">Question 1/6</span>
+                        <span id="timer" class="hide">Time: <span id="time-left">15</span>s</span>
+                    </div>
+                    <div class="progress-container">
+                        <div id="progress-bar"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-body">
+                    <h2 id="question-text">Question text will appear here</h2>
+                    <div id="options-container" class="options">
+                    </div>
+                </div>
+            </div>
+
+            <div id="result-screen" class="screen hide">
+                <h1>Quiz Completed!</h1>
+                <div class="score-container">
+                    <p>Your score: <span id="score">0</span>/<span id="total-questions">0</span></p>
+                    <div id="result-message"></div>
+                </div>
+                <button id="restart-btn" class="btn">Restart Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/quiz_data.js"></script>
+    <script src="/script.js"></script>
+</body>
+</html>
