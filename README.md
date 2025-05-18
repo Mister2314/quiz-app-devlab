@@ -52,15 +52,12 @@ This Quiz App is a simple yet interactive web application built as part of the D
 
 ### Start Screen
 ![Start Screen](./screenshots//Main-page.png)
-*Add a screenshot of your start screen here*
 
 ### Question Screen
 ![Question Screen](./screenshots/Question-page.png)
-*Add a screenshot of the quiz in progress with a question displayed*
 
 ### Results Screen
 ![Results Screen](./screenshots/Result-page.png)
-*Add a screenshot of the final results screen*
 
 ## 👨‍💻 Author
 
