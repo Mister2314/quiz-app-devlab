@@ -3,12 +3,12 @@
 <p align="center"><b>A multiple-choice quiz with immediate feedback, live progress and a scored result screen.</b></p>
 
 <p align="center">
-![HTML5](https://img.shields.io/badge/HTML5-e34f26?style=flat-square&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572b6?style=flat-square&logoColor=white)
-![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-f7df1e?style=flat-square&logoColor=white)
+<img src="https://img.shields.io/badge/HTML5-e34f26?style=flat-square" alt="HTML5" height="20">
+<img src="https://img.shields.io/badge/CSS3-1572b6?style=flat-square" alt="CSS3" height="20">
+<img src="https://img.shields.io/badge/Vanilla_JS-f7df1e?style=flat-square" alt="Vanilla JS" height="20">
 </p>
 
-<p align="center">[Quick start](#quick-start) · [Features](#features) · [Architecture](#architecture) · [FAQ](#faq)</p>
+<p align="center"><a href="#quick-start">Quick start</a> &nbsp;·&nbsp; <a href="#features">Features</a> &nbsp;·&nbsp; <a href="#architecture">Architecture</a> &nbsp;·&nbsp; <a href="#faq">FAQ</a></p>
 
 ## Overview
 
@@ -53,6 +53,14 @@ flowchart LR
   A["Browser"] --> B["HTML5"] --> C["CSS3"] --> D["Vanilla JavaScript"] --> E["`quiz_data.js` question set"] --> F["Deploy"]
 ```
 
+## Screenshots
+
+| Screen | What it shows |
+| :---: | --- |
+| <img src="screenshots/Main-page.png" alt="Start screen" width="300"> | Start screen |
+| <img src="screenshots/Question-page.png" alt="Question with feedback" width="300"> | Question with feedback |
+| <img src="screenshots/Result-page.png" alt="Scored result" width="300"> | Scored result |
+
 ## Quick Start
 
 ```bash
@@ -76,6 +84,35 @@ quiz_data.js — questions, options and correct answers
 style.css — layout and state styling
 screenshots/ — start, question and result screens
 ```
+
+## FAQ
+
+<details>
+<summary><b>Where do the questions come from?</b></summary>
+
+A separate `quiz_data.js` file. The quiz logic reads that array and never hard-codes a question, so the set can be swapped without touching `script.js`.
+
+</details>
+
+<details>
+<summary><b>How does the screen switching work?</b></summary>
+
+Three `<div>` sections — start, question, result — and one function that toggles which is visible. There is no router and no framework.
+
+</details>
+
+<details>
+<summary><b>Is the score saved?</b></summary>
+
+The high score is written to `localStorage`, so it survives a reload. The current run is not — refreshing mid-quiz restarts it.
+
+</details>
+
+## Roadmap
+
+- [ ] Save an in-progress attempt so a refresh does not lose it
+- [ ] Add a per-question review on the result screen
+- [ ] Add a shuffle option for question order
 
 ## Notes
 
