@@ -1,65 +1,70 @@
-# Quiz App - DevLab Internship Project
+# Quiz App
 
-A responsive multiple-choice quiz application that tests users on web development knowledge. The app presents questions one at a time, provides immediate feedback, tracks progress, and displays a final score.
+**A multiple-choice quiz with immediate feedback, live progress and a scored result screen.**
 
-## 📝 Description
+![HTML5](https://img.shields.io/badge/HTML5-e34f26?style=flat-square&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572b6?style=flat-square&logoColor=white)
+![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-f7df1e?style=flat-square&logoColor=white)
 
-This Quiz App is a simple yet interactive web application built as part of the DevLab Internship Program. It features a clean, user-friendly interface that allows users to test their knowledge of HTML, CSS, and JavaScript through a series of multiple-choice questions. The app provides immediate feedback on answers, tracks the user's progress, and displays a final score upon completion.
+## Overview
 
-## 🛠️ Technologies Used
+A three-screen quiz app that walks through a question set one question at a time. Answer, get instant feedback, see where you are in the set, and finish on a scored summary.
 
-- **HTML5**: Page structure and content
-- **CSS3**: Styling and responsive design
-- **JavaScript**: Quiz logic and dynamic content
-- **LocalStorage API**: Saving high scores
+Questions live in a separate `quiz_data.js` file, so the question set can be swapped or extended without touching the quiz logic — the app just reads the array.
 
-## ✨ Features
+Built as part of the DevLab internship programme.
 
-- Clean, minimalist user interface
-- Dynamic question loading
-- Immediate answer feedback with visual cues
-- Progress tracking (question counter and progress bar)
-- Final score calculation and personalized feedback
-- Option to restart the quiz
-- High score saving using localStorage
-- Optional timer functionality
-- Fully responsive design for mobile and desktop
+## Features
 
-## 🚀 How to Run
+- Three screens — start, question and result — swapped in place
+- Questions loaded from a separate `quiz_data.js` data file
+- Immediate right / wrong feedback on each answer
+- Live question counter and progress indicator
+- Score summary on the result screen
+- Restart without reloading the page
+- High score kept in `localStorage`
 
-1. Clone this repository:
-   ```
-   git clone https://github.com/Mister2314/quiz-app-devlab.git
-   ```
+## Tech Stack
 
-2. Navigate to the project directory:
-   ```
-   cd quiz-app-devlab
-   ```
+| Layer | Technology |
+| --- | --- |
+| Markup | HTML5 |
+| Styling | CSS3 |
+| Logic | Vanilla JavaScript |
+| Data | `quiz_data.js` question set |
 
-3. Open `index.html` in your preferred web browser:
-   - Double-click the file in your file explorer
-   - Or open it via command line:
-     ```
-     open index.html    # macOS
-     start index.html   # Windows
-     xdg-open index.html # Linux
-     ```
+## Getting Started
 
-4. No build process or dependencies required!
+No build step and no dependencies — clone the repo and open the entry file, or serve the folder locally:
 
-## 📸 Screenshots
+```bash
+git clone https://github.com/Mister2314/quiz-app-devlab.git
+cd quiz-app-devlab
 
-### Start Screen
-![Start Screen](./screenshots//Main-page.png)
+# Option 1 — open it directly
+start index.html      # Windows
+open  index.html      # macOS
 
-### Question Screen
-![Question Screen](./screenshots/Question-page.png)
+# Option 2 — serve it locally
+npx serve .
+```
 
-### Results Screen
-![Results Screen](./screenshots/Result-page.png)
+## Project Structure
 
-## 👨‍💻 Author
+```
+index.html — the three screens
+script.js — quiz flow, scoring and screen switching
+quiz_data.js — questions, options and correct answers
+style.css — layout and state styling
+screenshots/ — start, question and result screens
+```
 
-[Hüseynli Xəyal] - DevLab Internship Program
+## Notes
 
+Built during the **DevLab** internship programme. Keeping the questions in their own file meant the app itself never had to change as the question set grew.
+
+## Author
+
+**Xəyal Hüseynli** — Junior Front-End Developer
+
+[Portfolio](https://hypnosdev.vercel.app) · [GitHub](https://github.com/Mister2314) · [LinkedIn](https://www.linkedin.com/in/x%C9%99yal-h%C3%BCseynli-3487b91ba/) · [xeyalhuseynli06@gmail.com](mailto:xeyalhuseynli06@gmail.com)
