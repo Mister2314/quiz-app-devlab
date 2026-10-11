@@ -50,7 +50,7 @@ Built as part of the DevLab internship programme.
 
 ```mermaid
 flowchart LR
-  A["Browser"] --> B["HTML5"] --> C["CSS3"] --> D["Vanilla JavaScript"] --> E["`quiz_data.js` question set"] --> F["Deploy"]
+  A["Browser"] --> B["HTML5"] --> C["CSS3"] --> D["Vanilla JavaScript"] --> E["quiz_data.js question set"] --> F["Deploy"]
 ```
 
 ## Screenshots
