@@ -1,10 +1,14 @@
-# Quiz App
+<h1 align="center">Quiz App</h1>
 
-**A multiple-choice quiz with immediate feedback, live progress and a scored result screen.**
+<p align="center"><b>A multiple-choice quiz with immediate feedback, live progress and a scored result screen.</b></p>
 
+<p align="center">
 ![HTML5](https://img.shields.io/badge/HTML5-e34f26?style=flat-square&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572b6?style=flat-square&logoColor=white)
 ![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-f7df1e?style=flat-square&logoColor=white)
+</p>
+
+<p align="center">[Quick start](#quick-start) · [Features](#features) · [Architecture](#architecture) · [FAQ](#faq)</p>
 
 ## Overview
 
@@ -13,6 +17,15 @@ A three-screen quiz app that walks through a question set one question at a time
 Questions live in a separate `quiz_data.js` file, so the question set can be swapped or extended without touching the quiz logic — the app just reads the array.
 
 Built as part of the DevLab internship programme.
+
+## At a glance
+
+| Field | Detail |
+| --- | --- |
+| **Type** | Static site — no build step |
+| **Primary language** | JavaScript |
+| **Live demo** | not deployed |
+| **Repository** | [Mister2314/quiz-app-devlab](https://github.com/Mister2314/quiz-app-devlab) |
 
 ## Features
 
@@ -33,19 +46,24 @@ Built as part of the DevLab internship programme.
 | Logic | Vanilla JavaScript |
 | Data | `quiz_data.js` question set |
 
-## Getting Started
+## Architecture
 
-No build step and no dependencies — clone the repo and open the entry file, or serve the folder locally:
+```mermaid
+flowchart LR
+  A["Browser"] --> B["HTML5"] --> C["CSS3"] --> D["Vanilla JavaScript"] --> E["`quiz_data.js` question set"] --> F["Deploy"]
+```
+
+## Quick Start
 
 ```bash
 git clone https://github.com/Mister2314/quiz-app-devlab.git
 cd quiz-app-devlab
 
-# Option 1 — open it directly
+# open it directly
 start index.html      # Windows
 open  index.html      # macOS
 
-# Option 2 — serve it locally
+# or serve the folder
 npx serve .
 ```
 
