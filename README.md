@@ -8,6 +8,12 @@
 
 <div align="center">
 
+<img src="docs/demo.gif" alt="Quiz App — animated demo" width="700">
+
+</div>
+
+<div align="center">
+
 <img src="screenshots/Main-page.png" alt="Quiz App — start screen" width="700">
 
 <details>
