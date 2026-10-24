@@ -5,6 +5,20 @@
 <p align="center"><b>React 19 · TypeScript · Vite</b></p>
 
 <p align="center"><a href="#quick-start">Quick start</a> &nbsp;·&nbsp; <a href="#features">Features</a> &nbsp;·&nbsp; <a href="#architecture">Architecture</a> &nbsp;·&nbsp; <a href="#faq">FAQ</a></p>
+<div align="center">
+
+<img src="screenshots/Main-page.png" alt="Quiz App — start screen" width="700">
+
+<details>
+<summary>More screenshots</summary>
+
+| Question | Result |
+|---|---|
+| <img src="screenshots/Question-page.png" alt="Question with feedback" width="420"> | <img src="screenshots/Result-page.png" alt="Scored result" width="420"> |
+
+</details>
+
+</div>
 
 ## Overview
 
