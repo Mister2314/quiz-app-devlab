@@ -1,10 +1,11 @@
 <h1 align="center">Quiz App</h1>
 
-<p align="center"><b>A multiple-choice quiz with immediate feedback, live progress and a scored result screen.</b></p>
+<p align="center"><b>A minimal-editorial multiple-choice quiz with answer choreography, progress storytelling and a result-screen reveal.</b></p>
 
 <p align="center"><b>React 19 · TypeScript · Vite</b></p>
 
-<p align="center"><a href="#quick-start">Quick start</a> &nbsp;·&nbsp; <a href="#features">Features</a> &nbsp;·&nbsp; <a href="#architecture">Architecture</a> &nbsp;·&nbsp; <a href="#faq">FAQ</a></p>
+<p align="center"><a href="#quick-start">Quick start</a> &nbsp;·&nbsp; <a href="#features">Features</a> &nbsp;·&nbsp; <a href="#faq">FAQ</a></p>
+
 <div align="center">
 
 <img src="screenshots/Main-page.png" alt="Quiz App — start screen" width="700">
@@ -12,9 +13,9 @@
 <details>
 <summary>More screenshots</summary>
 
-| Question | Result |
+| Question + feedback | Result reveal |
 |---|---|
-| <img src="screenshots/Question-page.png" alt="Question with feedback" width="420"> | <img src="screenshots/Result-page.png" alt="Scored result" width="420"> |
+| <img src="screenshots/Question-page.png" alt="Question with answer feedback" width="420"> | <img src="screenshots/Result-page.png" alt="Scored result with new-best banner" width="420"> |
 
 </details>
 
@@ -22,77 +23,44 @@
 
 ## Overview
 
-A three-screen quiz app that walks through a question set one question at a time. Answer, get instant feedback, see where you are in the set, and finish on a scored summary.
+A three-screen quiz — start, question, result — with a typographic "Quiet Examination" art direction: paper background, ink text, one signal-blue accent, hairline rules. Answers give immediate right/wrong feedback (glyph + tint, never color alone), progress fills an animated bar, and the result screen counts the score up before revealing your best.
 
-Questions live in a separate `quiz_data.js` file, so the question set can be swapped or extended without touching the quiz logic — the app just reads the array.
-
-Built as part of the DevLab internship programme.
-
-## At a glance
+Built as part of the **DevLab** internship programme.
 
 | Field | Detail |
 | --- | --- |
-| **Type** | Static site — no build step |
-| **Primary language** | JavaScript |
+| **Type** | Static SPA — built with Vite |
 | **Live demo** | https://quiz-app-devlab.vercel.app |
 | **Repository** | [Mister2314/quiz-app-devlab](https://github.com/Mister2314/quiz-app-devlab) |
 
 ## Features
 
-- Three screens — start, question and result — swapped in place
-- Questions loaded from a separate `quiz_data.js` data file
-- Immediate right / wrong feedback on each answer
-- Live question counter and progress indicator
-- Score summary on the result screen
-- Restart without reloading the page
-- High score kept in `localStorage`
+- **Answer feedback choreography** — pressed option scales, correct/incorrect states show ✓/✕ glyphs with tint, others dim; a polite live region announces the outcome
+- **Progress storytelling** — animated progress bar plus "Question 03" running header and a tabular "03 / 06" counter
+- **Result-screen reveal** — rise-in headline, score counts up over 0.8s, then a "★ New best!" banner appears
+- **Keyboard + focus** — keys 1–4 answer, Enter starts/restarts; focus moves to the screen heading on every screen change and to the first option on each new question
+- **View Transitions API** — question/screen changes cross-fade with a slide (Chrome, Edge, Safari 18+, Firefox 144+), plain swap as fallback
+- **Mobile-perfect single column** — 56–60px thumb-height options, safe-area padding, full-width CTAs, no hover-dependent affordances
+- **Reduced motion** — `prefers-reduced-motion: reduce` disables every animation; the count-up renders instantly and transitions are skipped
+- High score in `localStorage`; restart without reloading
 
-## Tech Stack
+## Stack
 
 | Layer | Technology |
 | --- | --- |
-| Markup | HTML5 |
-| Styling | CSS3 |
-| Logic | Vanilla JavaScript |
-| Data | `quiz_data.js` question set |
-
-## Architecture
-
-```mermaid
-flowchart LR
-  A["Browser"] --> B["HTML5"] --> C["CSS3"] --> D["Vanilla JavaScript"] --> E["quiz_data.js question set"] --> F["Deploy"]
-```
-
-## Screenshots
-
-| Screen | What it shows |
-| :---: | --- |
-| <img src="screenshots/Main-page.png" alt="Start screen" width="300"> | Start screen |
-| <img src="screenshots/Question-page.png" alt="Question with feedback" width="300"> | Question with feedback |
-| <img src="screenshots/Result-page.png" alt="Scored result" width="300"> | Scored result |
+| UI | React 19 + TypeScript |
+| Styling | Hand-written CSS with design tokens |
+| Motion | CSS transitions + View Transitions API — zero animation dependencies |
+| Build | Vite 6 |
 
 ## Quick Start
 
 ```bash
 git clone https://github.com/Mister2314/quiz-app-devlab.git
 cd quiz-app-devlab
-
-# open it directly
-start index.html      # Windows
-open  index.html      # macOS
-
-# or serve the folder
-npx serve .
-```
-
-## Project Structure
-
-```
-index.html — the three screens
-script.js — quiz flow, scoring and screen switching
-quiz_data.js — questions, options and correct answers
-style.css — layout and state styling
-screenshots/ — start, question and result screens
+npm install
+npm run dev      # local dev server
+npm run build    # production build to dist/
 ```
 
 ## FAQ
@@ -100,33 +68,20 @@ screenshots/ — start, question and result screens
 <details>
 <summary><b>Where do the questions come from?</b></summary>
 
-A separate `quiz_data.js` file. The quiz logic reads that array and never hard-codes a question, so the set can be swapped without touching `script.js`.
+`src/quizData.ts` — the quiz logic never hard-codes a question, so the set can be swapped without touching `App.tsx`.
 
 </details>
 
 <details>
-<summary><b>How does the screen switching work?</b></summary>
+<summary><b>How does the answer feedback work?</b></summary>
 
-Three `<div>` sections — start, question, result — and one function that toggles which is visible. There is no router and no framework.
-
-</details>
-
-<details>
-<summary><b>Is the score saved?</b></summary>
-
-The high score is written to `localStorage`, so it survives a reload. The current run is not — refreshing mid-quiz restarts it.
+Selecting an option locks the question, marks the correct answer and your pick with glyphs and tints, announces the result to screen readers, then advances after 1.5s. The high score is written to `localStorage` on the result screen and survives a reload.
 
 </details>
-
-## Roadmap
-
-- [ ] Save an in-progress attempt so a refresh does not lose it
-- [ ] Add a per-question review on the result screen
-- [ ] Add a shuffle option for question order
 
 ## Notes
 
-Built during the **DevLab** internship programme. Keeping the questions in their own file meant the app itself never had to change as the question set grew.
+Built during the **DevLab** internship programme — typographic hierarchy carries the interface, and every animated beat has a static reduced-motion equivalent.
 
 ## Author
 

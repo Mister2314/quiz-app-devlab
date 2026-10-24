@@ -1,10 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { quizData } from "./quizData";
 
 type Screen = "start" | "quiz" | "result";
 
-const TIMER_SECONDS = 15;
-const USE_TIMER = false;
+const ADVANCE_DELAY = 1500;
+
+function prefersReducedMotion(): boolean {
+  return typeof window.matchMedia === "function"
+    && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/** Wrap a DOM update in the View Transitions API when available and wanted. */
+function withViewTransition(update: () => void) {
+  if (prefersReducedMotion() || typeof document.startViewTransition !== "function") {
+    update();
+    return;
+  }
+  document.startViewTransition(update);
+}
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("start");
@@ -13,6 +26,9 @@ export default function App() {
   const [isAnswered, setIsAnswered] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
   const advanceTimer = useRef<number | undefined>(undefined);
+
+  const screenHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  const firstOptionRef = useRef<HTMLButtonElement | null>(null);
 
   const currentQuestion = quizData[currentQuestionIndex];
   const progressPercentage = (currentQuestionIndex / quizData.length) * 100;
@@ -25,12 +41,29 @@ export default function App() {
     };
   }, []);
 
-  function initQuiz() {
+  // Focus management: move focus to the screen heading on every screen change.
+  useEffect(() => {
+    screenHeadingRef.current?.focus();
+  }, [screen]);
+
+  // Focus management: put keyboard focus on the first option when a new question loads.
+  useEffect(() => {
+    if (screen === "quiz" && !isAnswered) {
+      firstOptionRef.current?.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentQuestionIndex, screen]);
+
+  const initQuiz = useCallback(() => {
     setCurrentQuestionIndex(0);
     setScore(0);
     setIsAnswered(false);
     setSelected(null);
-  }
+  }, []);
+
+  const showResults = useCallback(() => {
+    withViewTransition(() => setScreen("result"));
+  }, []);
 
   function checkAnswer(selectedIndex: number) {
     if (isAnswered) return;
@@ -41,25 +74,42 @@ export default function App() {
     }
     advanceTimer.current = window.setTimeout(() => {
       if (currentQuestionIndex < quizData.length - 1) {
-        setCurrentQuestionIndex((i) => i + 1);
-        setIsAnswered(false);
-        setSelected(null);
+        withViewTransition(() => {
+          setCurrentQuestionIndex((i) => i + 1);
+          setIsAnswered(false);
+          setSelected(null);
+        });
       } else {
         showResults();
       }
-    }, 1500);
+    }, ADVANCE_DELAY);
   }
 
-  function showResults() {
-    setScreen("result");
+  function startQuiz() {
+    initQuiz();
+    withViewTransition(() => setScreen("quiz"));
   }
 
-  function saveHighScore(finalScore: number) {
-    const highScore = Number(localStorage.getItem("quizHighScore")) || 0;
-    if (finalScore > highScore) {
-      localStorage.setItem("quizHighScore", String(finalScore));
+  function restartQuiz() {
+    if (advanceTimer.current !== undefined) {
+      clearTimeout(advanceTimer.current);
     }
+    startQuiz();
   }
+
+  // Keyboard navigation: 1–4 to answer.
+  useEffect(() => {
+    if (screen !== "quiz") return;
+    function onKeyDown(event: KeyboardEvent) {
+      const n = Number(event.key);
+      if (!isAnswered && n >= 1 && n <= currentQuestion.options.length) {
+        checkAnswer(n - 1);
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [screen, isAnswered, currentQuestionIndex]);
 
   const percentage = (score / quizData.length) * 100;
 
@@ -68,18 +118,17 @@ export default function App() {
       <div className="quiz-app">
         {screen === "start" && (
           <div id="start-screen" className="screen">
-            <h1>Brain Teaser Quiz</h1>
-            <p>Test your knowledge with these web development questions!</p>
-            <button
-              id="start-btn"
-              className="btn"
-              onClick={() => {
-                initQuiz();
-                setScreen("quiz");
-              }}
-            >
+            <p className="kicker">DevLab · Brain Teaser</p>
+            <h1 ref={screenHeadingRef} tabIndex={-1} className="screen-heading">
+              Quiet Examination
+            </h1>
+            <p className="screen-lede">
+              Six web-development questions. Answer with a click or keys 1–4.
+            </p>
+            <button id="start-btn" className="btn" onClick={startQuiz}>
               Start Quiz
             </button>
+            <HighScoreBanner />
           </div>
         )}
 
@@ -87,14 +136,22 @@ export default function App() {
           <div id="quiz-screen" className="screen">
             <div className="quiz-header">
               <div className="quiz-info">
-                <span id="question-counter">
-                  {`Question ${currentQuestionIndex + 1}/${quizData.length}`}
+                <span className="question-number">
+                  Question {String(currentQuestionIndex + 1).padStart(2, "0")}
                 </span>
-                <span id="timer" className={USE_TIMER ? "" : "hide"}>
-                  Time: <span id="time-left">{TIMER_SECONDS}</span>s
+                <span className="question-counter">
+                  {String(currentQuestionIndex + 1).padStart(2, "0")} /{" "}
+                  {String(quizData.length).padStart(2, "0")}
                 </span>
               </div>
-              <div className="progress-container">
+              <div
+                className="progress-container"
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={quizData.length}
+                aria-valuenow={currentQuestionIndex}
+                aria-label="Quiz progress"
+              >
                 <div
                   id="progress-bar"
                   style={{ width: `${progressPercentage}%` }}
@@ -103,8 +160,20 @@ export default function App() {
             </div>
 
             <div className="quiz-body">
-              <h2 id="question-text">{currentQuestion.question}</h2>
-              <div id="options-container" className="options">
+              <h2
+                id="question-text"
+                ref={screenHeadingRef}
+                tabIndex={-1}
+                className="question-heading"
+              >
+                {currentQuestion.question}
+              </h2>
+              <div
+                id="options-container"
+                className="options"
+                role="group"
+                aria-label="Answer options"
+              >
                 {currentQuestion.options.map((option, index) => {
                   const classes = ["option"];
                   if (isAnswered) {
@@ -116,65 +185,101 @@ export default function App() {
                       classes.push("correct");
                     }
                   }
+                  const mark =
+                    isAnswered && index === currentQuestion.correctIndex
+                      ? "✓"
+                      : isAnswered && selected === index
+                        ? "✕"
+                        : String(index + 1);
                   return (
                     <button
                       key={index}
+                      ref={index === 0 ? firstOptionRef : undefined}
                       className={classes.join(" ")}
                       onClick={() => checkAnswer(index)}
+                      aria-disabled={isAnswered || undefined}
                     >
-                      {option}
+                      <span className="option-key" aria-hidden="true">
+                        {mark}
+                      </span>
+                      <span className="option-text">{option}</span>
                     </button>
                   );
                 })}
               </div>
+              <p className="visually-hidden" role="status" aria-live="polite">
+                {isAnswered
+                  ? selected === currentQuestion.correctIndex
+                    ? "Correct."
+                    : `Incorrect. The answer is: ${currentQuestion.options[currentQuestion.correctIndex]}`
+                  : ""}
+              </p>
             </div>
           </div>
         )}
 
         {screen === "result" && (
-          <div id="result-screen" className="screen">
-            <h1>Quiz Completed!</h1>
-            <div className="score-container">
-              <p>
-                Your score: <span id="score">{score}</span>/
-                <span id="total-questions">{quizData.length}</span>
-              </p>
-              <ResultMessage
-                percentage={percentage}
-                onSave={(finalScore) => saveHighScore(finalScore)}
-                score={score}
-              />
-            </div>
-            <button
-              id="restart-btn"
-              className="btn"
-              onClick={() => {
-                initQuiz();
-                setScreen("quiz");
-              }}
-            >
-              Restart Quiz
-            </button>
-          </div>
+          <ResultScreen
+            score={score}
+            total={quizData.length}
+            percentage={percentage}
+            headingRef={screenHeadingRef}
+            onRestart={restartQuiz}
+          />
         )}
       </div>
     </div>
   );
 }
 
-function ResultMessage({
-  percentage,
+function HighScoreBanner() {
+  const highScore = Number(localStorage.getItem("quizHighScore")) || 0;
+  if (highScore <= 0) return null;
+  return (
+    <p className="high-score-banner">
+      Best so far: <strong>{highScore}</strong> / {quizData.length}
+    </p>
+  );
+}
+
+function ResultScreen({
   score,
-  onSave,
+  total,
+  percentage,
+  headingRef,
+  onRestart,
 }: {
-  percentage: number;
   score: number;
-  onSave: (score: number) => void;
+  total: number;
+  percentage: number;
+  headingRef: React.RefObject<HTMLHeadingElement | null>;
+  onRestart: () => void;
 }) {
+  const [displayed, setDisplayed] = useState(prefersReducedMotion() ? score : 0);
+  const [bannerVisible, setBannerVisible] = useState(prefersReducedMotion());
+  const prevHigh = useRef(Number(localStorage.getItem("quizHighScore")) || 0);
+
   useEffect(() => {
-    onSave(score);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (score > prevHigh.current) {
+      localStorage.setItem("quizHighScore", String(score));
+    }
+  }, [score]);
+
+  // Reveal choreography: count-up, then the high-score banner.
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    let raf = 0;
+    const started = performance.now();
+    const duration = 800;
+    const tick = (now: number) => {
+      const t = Math.min((now - started) / duration, 1);
+      setDisplayed(Math.round(t * score));
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else setBannerVisible(true);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [score]);
 
   let message: string;
   if (percentage >= 80) {
@@ -186,5 +291,28 @@ function ResultMessage({
   } else {
     message = "You might need more practice. Don't give up!";
   }
-  return <div id="result-message">{message}</div>;
+
+  const isNewBest = score > prevHigh.current && score > 0;
+
+  return (
+    <div id="result-screen" className="screen">
+      <p className="kicker">Examination complete</p>
+      <h1 ref={headingRef} tabIndex={-1} className="screen-heading result-heading">
+        {score} / {total}
+      </h1>
+      <div className="score-container">
+        <p className="score-line">
+          Your score: <span id="score">{displayed}</span>/
+          <span id="total-questions">{total}</span>
+        </p>
+        <p id="result-message">{message}</p>
+        <p className={`high-score-banner${bannerVisible ? " visible" : ""}`}>
+          {isNewBest ? "★ New best!" : `Best: ${Math.max(prevHigh.current, score)} / ${total}`}
+        </p>
+      </div>
+      <button id="restart-btn" className="btn" onClick={onRestart}>
+        Restart Quiz
+      </button>
+    </div>
+  );
 }
