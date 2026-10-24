@@ -1,4 +1,4 @@
-<h1 align="center">Quiz App</h1>
+﻿<h1 align="center">Quiz App</h1>
 
 <p align="center"><b>A multiple-choice quiz with immediate feedback, live progress and a scored result screen.</b></p>
 
@@ -24,7 +24,7 @@ Built as part of the DevLab internship programme.
 | --- | --- |
 | **Type** | Static site — no build step |
 | **Primary language** | JavaScript |
-| **Live demo** | not deployed |
+| **Live demo** | https://quiz-app-devlab-tawny.vercel.app |
 | **Repository** | [Mister2314/quiz-app-devlab](https://github.com/Mister2314/quiz-app-devlab) |
 
 ## Features
