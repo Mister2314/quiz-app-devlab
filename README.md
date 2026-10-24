@@ -1,12 +1,8 @@
-﻿<h1 align="center">Quiz App</h1>
+<h1 align="center">Quiz App</h1>
 
 <p align="center"><b>A multiple-choice quiz with immediate feedback, live progress and a scored result screen.</b></p>
 
-<p align="center">
-<img src="https://img.shields.io/badge/HTML5-e34f26?style=flat-square" alt="HTML5" height="20">
-<img src="https://img.shields.io/badge/CSS3-1572b6?style=flat-square" alt="CSS3" height="20">
-<img src="https://img.shields.io/badge/Vanilla_JS-f7df1e?style=flat-square" alt="Vanilla JS" height="20">
-</p>
+<p align="center"><b>React 19 · TypeScript · Vite</b></p>
 
 <p align="center"><a href="#quick-start">Quick start</a> &nbsp;·&nbsp; <a href="#features">Features</a> &nbsp;·&nbsp; <a href="#architecture">Architecture</a> &nbsp;·&nbsp; <a href="#faq">FAQ</a></p>
 
@@ -24,7 +20,7 @@ Built as part of the DevLab internship programme.
 | --- | --- |
 | **Type** | Static site — no build step |
 | **Primary language** | JavaScript |
-| **Live demo** | https://quiz-app-devlab-tawny.vercel.app |
+| **Live demo** | https://quiz-app-devlab.vercel.app |
 | **Repository** | [Mister2314/quiz-app-devlab](https://github.com/Mister2314/quiz-app-devlab) |
 
 ## Features
