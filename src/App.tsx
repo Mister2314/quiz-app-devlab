@@ -283,13 +283,13 @@ function ResultScreen({
 
   let message: string;
   if (percentage >= 80) {
-    message = "Excellent! You're a web development expert!";
+    message = "Grade A — no corrections needed. The examiner is impressed.";
   } else if (percentage >= 60) {
-    message = "Good job! You have solid knowledge.";
+    message = "Solid pass. A margin note or two, nothing structural.";
   } else if (percentage >= 40) {
-    message = "Not bad. Keep learning and try again.";
+    message = "Passed with red ink. Revisit the marked answers.";
   } else {
-    message = "You might need more practice. Don't give up!";
+    message = "Resit recommended. The paper is graded honestly.";
   }
 
   const isNewBest = score > prevHigh.current && score > 0;

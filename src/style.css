@@ -5,8 +5,8 @@
   --ink: #1d1f24;
   --ink-soft: #6b6f76;
   --hairline: #e6e3dc;
-  --accent: #2456e6;
-  --accent-soft: #eaf0ff;
+  --accent: #14625a;
+  --accent-soft: #e7f1ef;
   --correct-bg: #e9f6ec;
   --correct-ink: #1e6b3a;
   --incorrect-bg: #fdeeee;
@@ -38,7 +38,23 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Paper grain: a barely-there fiber texture so the surface reads as paper, not #fff. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(rgba(29, 31, 36, 0.028) 1px, transparent 1px),
+    radial-gradient(rgba(29, 31, 36, 0.02) 1px, transparent 1px);
+  background-size: 7px 7px, 11px 11px;
+  background-position: 0 0, 3px 5px;
+}
+
 .container {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 680px;
   padding: 20px;
@@ -67,7 +83,7 @@ body {
   white-space: nowrap;
 }
 
-/* — Typography — */
+/* — Typography: serif display over sans text = the editorial "ink" voice — */
 .kicker {
   font-size: 0.75rem;
   letter-spacing: 0.14em;
@@ -77,6 +93,7 @@ body {
 }
 
 .screen-heading {
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
   font-size: 2.4rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -99,6 +116,7 @@ body {
 }
 
 .question-heading {
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
   font-size: 1.45rem;
   font-weight: 650;
   letter-spacing: -0.01em;
@@ -253,6 +271,7 @@ body {
   font-size: 3.6rem;
   font-variant-numeric: tabular-nums;
   animation: rise-in 600ms var(--ease-out) both;
+  letter-spacing: -0.03em;
 }
 
 @keyframes rise-in {
@@ -300,13 +319,13 @@ body {
   opacity: 1;
 }
 
-/* — Buttons — */
+/* — Buttons: squared, stamped — not the default pill — */
 .btn {
   background-color: var(--ink);
   color: var(--paper);
   border: none;
   padding: 14px 34px;
-  border-radius: 999px;
+  border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
