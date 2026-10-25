@@ -29,7 +29,7 @@
 
 ## Overview
 
-A three-screen quiz — start, question, result — with a typographic "Quiet Examination" art direction: paper background, ink text, one signal-blue accent, hairline rules. Answers give immediate right/wrong feedback (glyph + tint, never color alone), progress fills an animated bar, and the result screen counts the score up before revealing your best.
+A twelve-question quiz — start, question, result — with a typographic "Quiet Examination" art direction: paper background, ink text, one teal accent, hairline rules. Answers give immediate right/wrong feedback (glyph + tint, never color alone), a 30-second fuse runs under each question, a streak counter rewards consecutive correct answers, and the result screen counts the score up, then prints a corrections sheet explaining every wrong answer.
 
 Built as part of the **DevLab** internship programme.
 
@@ -42,7 +42,14 @@ Built as part of the **DevLab** internship programme.
 ## Features
 
 - **Answer feedback choreography** — pressed option scales, correct/incorrect states show ✓/✕ glyphs with tint, others dim; a polite live region announces the outcome
-- **Progress storytelling** — animated progress bar plus "Question 03" running header and a tabular "03 / 06" counter
+- **Per-question timer** — a thin fuse bar runs under the progress; when it burns out the question is marked "out of time" and the quiz moves on
+- **Streaks** — consecutive correct answers build a live streak chip; your best streak appears on the result screen
+- **Corrections sheet** — every wrong answer is listed with what you picked, the correct answer and a one-line explanation, so the quiz teaches after it grades
+- **Categories & difficulty** — each question is tagged HTML / CSS / JavaScript and easy / medium / hard
+- **Shareable result** — one tap shares (or copies) a result line: score, percentage, best streak
+- **Dark & light, no flash** — follows the system by default, a corner toggle persists your choice, and a pre-paint script means the first frame is always the right scheme
+- **Works offline** — a small service worker caches the app shell; after the first visit the quiz runs with no network
+- **Progress storytelling** — animated progress bar plus "Question 03" running header and a tabular "03 / 12" counter
 - **Result-screen reveal** — rise-in headline, score counts up over 0.8s, then a "★ New best!" banner appears
 - **Keyboard + focus** — keys 1–4 answer, Enter starts/restarts; focus moves to the screen heading on every screen change and to the first option on each new question
 - **View Transitions API** — question/screen changes cross-fade with a slide (Chrome, Edge, Safari 18+, Firefox 144+), plain swap as fallback
@@ -67,6 +74,8 @@ cd quiz-app-devlab
 npm install
 npm run dev      # local dev server
 npm run build    # production build to dist/
+npm run lint     # eslint over src/
+npm run typecheck
 ```
 
 ## FAQ
@@ -81,7 +90,14 @@ npm run build    # production build to dist/
 <details>
 <summary><b>How does the answer feedback work?</b></summary>
 
-Selecting an option locks the question, marks the correct answer and your pick with glyphs and tints, announces the result to screen readers, then advances after 1.5s. The high score is written to `localStorage` on the result screen and survives a reload.
+Selecting an option locks the question, marks the correct answer and your pick with glyphs and tints, announces the result to screen readers, then advances after 1.5s. If the 30-second fuse burns out first, the question is recorded as "out of time" and shows up on the corrections sheet. The high score is written to `localStorage` on the result screen and survives a reload.
+
+</details>
+
+<details>
+<summary><b>Does it work offline?</b></summary>
+
+Yes, after the first visit. A small service worker (`public/sw.js`) caches the built app shell, so the quiz loads and plays with no network. It is a progressive enhancement — the app works exactly the same without it.
 
 </details>
 

@@ -11,9 +11,30 @@
   --correct-ink: #1e6b3a;
   --incorrect-bg: #fdeeee;
   --incorrect-ink: #a13333;
+  --grain: rgba(29, 31, 36, 0.028);
+  --grain-2: rgba(29, 31, 36, 0.02);
+  --shadow: rgba(29, 31, 36, 0.06);
   --radius: 14px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --feedback-ms: 180ms;
+}
+
+/* Dark is designed for the same paper-desk metaphor: ink at night, not inverted. */
+:root[data-theme="dark"] {
+  --paper: #16181c;
+  --surface: #1e2126;
+  --ink: #e8e6df;
+  --ink-soft: #9aa0a8;
+  --hairline: #31353c;
+  --accent: #5ec8bb;
+  --accent-soft: #1f3a37;
+  --correct-bg: #17291d;
+  --correct-ink: #7fd39a;
+  --incorrect-bg: #2e1b1b;
+  --incorrect-ink: #e08d8d;
+  --grain: rgba(232, 230, 223, 0.03);
+  --grain-2: rgba(232, 230, 223, 0.02);
+  --shadow: rgba(0, 0, 0, 0.35);
 }
 
 * {
@@ -24,7 +45,7 @@
 }
 
 html {
-  color-scheme: light;
+  color-scheme: light dark;
 }
 
 body {
@@ -46,8 +67,8 @@ body::before {
   pointer-events: none;
   z-index: 0;
   background-image:
-    radial-gradient(rgba(29, 31, 36, 0.028) 1px, transparent 1px),
-    radial-gradient(rgba(29, 31, 36, 0.02) 1px, transparent 1px);
+    radial-gradient(var(--grain) 1px, transparent 1px),
+    radial-gradient(var(--grain-2) 1px, transparent 1px);
   background-size: 7px 7px, 11px 11px;
   background-position: 0 0, 3px 5px;
 }
@@ -65,7 +86,7 @@ body::before {
   background-color: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
-  box-shadow: 0 12px 32px rgba(29, 31, 36, 0.06);
+  box-shadow: 0 12px 32px var(--shadow);
   overflow: hidden;
 }
 
@@ -379,6 +400,174 @@ body::before {
   ::view-transition-new(root) {
     animation: none !important;
   }
+}
+
+/* — Theme toggle: a small stamp in the corner, not a settings panel — */
+.theme-toggle {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    color var(--feedback-ms) var(--ease-out),
+    border-color var(--feedback-ms) var(--ease-out),
+    transform var(--feedback-ms) var(--ease-out);
+}
+
+.theme-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.theme-toggle:active {
+  transform: scale(0.94);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* — Question tags: category + difficulty, printed small — */
+.question-tags {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.tag-hard {
+  color: var(--incorrect-ink);
+  border-color: var(--incorrect-ink);
+}
+
+/* — Per-question timer: a thin fuse under the progress bar — */
+.timer-bar {
+  margin-top: 6px;
+  height: 2px;
+  background-color: transparent;
+}
+
+.timer-fill {
+  height: 100%;
+  background-color: var(--ink-soft);
+  border-radius: 2px;
+  transition: width 980ms linear;
+}
+
+.timer-low .timer-fill {
+  background-color: var(--incorrect-ink);
+}
+
+/* — Streak chip — */
+.quiz-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.streak-chip {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* — Result: facts row, review of wrong answers, share — */
+.result-facts {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.review {
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+.review-heading {
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 650;
+  margin-bottom: 14px;
+}
+
+.review-list {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.review-item {
+  background-color: var(--paper);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--incorrect-ink);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 0.92rem;
+}
+
+.review-question {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.review-your-answer {
+  color: var(--incorrect-ink);
+  margin-bottom: 2px;
+}
+
+.review-correct-answer {
+  color: var(--correct-ink);
+  margin-bottom: 6px;
+}
+
+.review-explanation {
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.result-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+}
+
+.btn-ghost:hover {
+  background-color: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* — Mobile: thumb-first single column — */
