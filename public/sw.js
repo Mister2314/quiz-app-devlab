@@ -22,6 +22,30 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  // Navigation requests go network-first (fall back to the cache when
+  // offline) so users get the freshest app shell; static assets stay
+  // cache-first.
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches
+            .open(CACHE)
+            .then((cache) => cache.put(event.request, copy))
+            .catch(() => {});
+          return response;
+        })
+        .catch(() =>
+          caches
+            .match(event.request)
+            .then((cached) => cached || caches.match("/index.html")),
+        ),
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(
       (cached) =>
